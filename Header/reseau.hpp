@@ -17,4 +17,8 @@ class Reseau
         std::vector<Neurone> m_neurones;
 };
 
+
+void premiere_generation(std::vector<Reseau> &generation, int NbIndividu, int NbCouche, int NbParCouche, int NbEntree);
+void calcul_sorties(const std::vector<Reseau> &generation, const std::vector<double> & entree, std::vector<double> & sortie );
+
 #endif
