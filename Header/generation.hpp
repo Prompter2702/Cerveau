@@ -2,6 +2,7 @@
 #define GENERATION_HPP
 
 #include <vector>
+#include <algorithm>
 #include "reseau.hpp"
 
 
@@ -11,6 +12,9 @@ class Generation
         Generation(int NbIndividu, int NbCouche, int NbParCouche, int NbEntree);
         void calcul_sorties(const std::vector<double> & entree);
         void calcul_scores(const std::vector< std::vector<double> > & listeEntrees, const std::vector<bool> reponses);
+        void selection();
+
+        double get_score_moyen(int nbtests);
 
     private :
         int m_nbIndividu;
@@ -23,5 +27,6 @@ class Generation
         std::vector<int> m_score;
 };
 
+bool comparator(const std::pair<int, double>& a, const std::pair<int, double>& b);
 
 #endif

@@ -33,9 +33,55 @@ void Generation::calcul_scores(const std::vector< std::vector<double> > & listeE
         for(int j=0; j< m_nbIndividu ; j++)
         {
             bool s = (m_sortie[j]>0) ? true : false ;
-            if(s==reponses[j]){
+            if(s==reponses[i]){
                 m_score[j]++;
             }
         }
     }
+}
+
+void Generation::selection()
+{
+    std::vector<int> indices(m_nbIndividu);
+    for(int i=0; i<m_nbIndividu; i++)
+    {
+        indices[i] = i;
+    }
+    // create a vector of pairs from the two input vectors
+    std::vector<std::pair<int, double>> pairs;
+    for (int i = 0; i < indices.size(); i++) {
+        pairs.push_back( std::make_pair(indices[i], m_score[i]) );
+    }
+    // sort the vector of pairs using the custom comparator
+    std::sort(pairs.begin(), pairs.end(), comparator);
+
+    //REPRODUCTION :
+    std::vector<Reseau> nv_gen;
+    //Il faut que le nombre d'individu soit divisible par 20
+    for(int tranche = 0; tranche<5; tranche ++)
+    {
+        int taille_tranche(m_nbIndividu/20);
+        for(int ind = 2*tranche*taille_tranche; ind<(2*tranche+1)*taille_tranche; ind++)
+        {
+            for(int enf = 0; enf<6-tranche; enf++)
+            {
+                nv_gen.push_back(m_reseaux[ pairs[ind].first ]%m_reseaux[ pairs[ind + taille_tranche].first ]);
+            }
+        }
+    }
+}
+
+double Generation::get_score_moyen(int nbtests)
+{
+    double res = 0.0;
+    for(int i=0; i<m_nbIndividu; i++){
+        res += m_score[i];
+    }
+
+    return res/( (double) m_nbIndividu*nbtests);
+}
+
+bool comparator(const std::pair<int, double>& a, const std::pair<int, double>& b)
+{
+    return a.second < b.second; // sort by value in descending order
 }
