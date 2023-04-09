@@ -10,15 +10,22 @@ class Reseau
         Reseau(int NbCouche, int NbParCouche, int NbEntree);
         double calcul_sortie(std::vector<double> entree);
 
+        Reseau& operator !(); //Reproduction assexuée
+        Reseau& operator %(const Reseau & res); //Reproduction sexuée
+
+        //Accesseurs et modificateurs
+        int get_tauxMutation() const;
+        void set_tauxMutation(int);
+
+        Neurone & operator[](int num_neur);
+        Neurone operator()(int num_neur) const;
+
     private:
         int m_nbCouche;
         int m_nbParCouche;
         int m_nbEntrees;
+        int m_tauxMutation; //Une chance sur ...
         std::vector<Neurone> m_neurones;
 };
-
-
-void premiere_generation(std::vector<Reseau> &generation, int NbIndividu, int NbCouche, int NbParCouche, int NbEntree);
-void calcul_sorties(const std::vector<Reseau> &generation, const std::vector<double> & entree, std::vector<double> & sortie );
 
 #endif

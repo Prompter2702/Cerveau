@@ -1,3 +1,5 @@
+#include <random>
+
 #include "../Header/reseau.hpp"
 
 
@@ -55,4 +57,61 @@ double Reseau::calcul_sortie(std::vector<double> entree)
     }
 
     return res;
+}
+
+///////Accesseurs et modificateurs////////
+
+int Reseau::get_tauxMutation() const
+{
+    return m_tauxMutation;
+}
+
+void Reseau::set_tauxMutation(int taux)
+{
+    m_tauxMutation = taux;
+}
+
+Neurone & Reseau::operator[](int num_neur)
+{
+    return m_neurones[num_neur];
+}
+
+Neurone Reseau::operator()(int num_neur) const
+{
+    return m_neurones[num_neur];
+}
+
+//////////SURCHARGE OPERATEURS///////////
+
+Reseau& Reseau::operator !() //Reproduction assexuée
+{
+    for(int neur=0; neur<m_nbCouche*m_nbParCouche; neur++)
+    {
+        for(int synapse =0; synapse< m_neurones[neur].get_nbEntree(); synapse++)
+        {
+            int tirage = std::rand() % (m_tauxMutation + 1);
+            if(tirage==0)
+            {
+                m_neurones[neur].retirage(synapse);
+            }
+        }
+    }
+    return *this;
+}
+
+Reseau& Reseau::operator %(const Reseau & res) //Reproduction sexuée
+{
+    //On mélange les neurones puis on fait une reproduction assexuée
+    for(int neur=0; neur<m_nbCouche*m_nbParCouche; neur++)
+    {
+        int tirage = std::rand()%2;
+        if(tirage==0) //On prend le neurone du nouveau
+        {
+            m_neurones[neur] = res(neur);
+        }
+    }
+
+    !(*this);
+
+    return *this;
 }
